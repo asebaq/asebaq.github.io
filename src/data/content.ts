@@ -14,10 +14,7 @@ export const person = {
   calendly: "", // add a booking link here to show the "Schedule a call" button
   intro:
     "I build video systems that run in production — detection, tracking, re-identification and action recognition on live camera feeds, broadcast streams and microscopy. Seven years across surveillance, sports analytics, biometrics and medical imaging.",
-  cv: [
-    { label: "General CV", file: "/cv-ahmad-sebaq.pdf" },
-    { label: "Video-focused CV", file: "/cv-ahmad-sebaq-video.pdf" },
-  ],
+  cv: [{ label: "CV", file: "/cv-ahmad-sebaq.pdf" }],
 };
 
 // ── Services ────────────────────────────────────────────────────────────────

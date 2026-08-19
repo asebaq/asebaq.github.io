@@ -26,12 +26,11 @@ Dates in `roles` use `YYYY-MM`; `end: null` means "present" and puts the clip ac
 
 ## CV PDFs
 
-`public/cv-ahmad-sebaq.pdf` and `public/cv-ahmad-sebaq-video.pdf` are copies of the LaTeX build in
-`~/latex/ahmad_sebaq_CV`. Refresh them after rebuilding the CV:
+`public/cv-ahmad-sebaq.pdf` is a copy of the LaTeX build in `~/latex/ahmad_sebaq_CV`.
+Refresh it after rebuilding the CV:
 
 ```bash
 cp ~/latex/ahmad_sebaq_CV/main.pdf public/cv-ahmad-sebaq.pdf
-cp ~/latex/ahmad_sebaq_CV/main_video.pdf public/cv-ahmad-sebaq-video.pdf
 ```
 
 ## Local development
