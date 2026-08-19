@@ -363,7 +363,7 @@ p { margin: 0; }
   display: flex;
   flex-wrap: wrap;
   gap: 1.25rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
@@ -373,75 +373,24 @@ p { margin: 0; }
 .legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
 .legend i { width: 16px; height: 3px; display: inline-block; border-radius: 2px; }
 
+/* time runs down the page; --cols is how many roles ever ran at once */
 .timeline {
   position: relative;
-  margin-top: 2.25rem;
-  display: grid;
-  grid-template-columns: 3.25rem repeat(3, 1fr);
-  gap: 0 0.75rem;
+  margin: 2.5rem 0 0 3.25rem;
 }
 
-.tl-overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 3.25rem;
-  right: 0;
-  pointer-events: none;
-}
-.tl-rule { position: absolute; left: 0; right: 0; height: 1px; background: var(--line-soft); opacity: 0; transition: opacity 0.2s ease; }
-.tl-axis { position: relative; }
+.tl-axis { position: absolute; inset: 0; pointer-events: none; }
+.tl-rule { position: absolute; left: 0; right: 0; height: 1px; background: var(--line-soft); }
 .tl-year {
   position: absolute;
-  left: 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  left: -3.25rem;
   transform: translateY(-50%);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--fg-dim);
 }
 
-.tl-lane { position: relative; }
-.tl-lane-head {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg-mid);
-  padding-bottom: 0.55rem;
-  margin-bottom: 0.85rem;
-  border-bottom: 1px solid var(--line);
-}
-.tl-lane-head em { font-style: normal; color: var(--fg-dim); letter-spacing: 0.08em; }
-.tl-body { position: relative; }
-
-.clip {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--top);
-  min-height: var(--h);
-  background: var(--ink-800);
-  border: 1px solid var(--line-soft);
-  border-left: 3px solid var(--clip);
-  border-radius: var(--radius);
-  padding: 0.85rem 0.95rem;
-  transition: border-color 0.18s ease, background 0.18s ease;
-}
-.clip:hover { background: var(--ink-750); border-color: var(--line); border-left-color: var(--clip); }
-.clip h3 { font-size: 0.98rem; margin-bottom: 0.15rem; }
-.clip .org { font-size: 0.88rem; color: var(--fg); }
-.clip .when {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  color: var(--fg-dim);
-  margin: 0.35rem 0 0.55rem;
-}
-.clip .details { font-size: 0.84rem; color: var(--fg-mid); line-height: 1.5; }
-
-.playhead { position: absolute; left: 0; right: 0; height: 1px; background: var(--track); opacity: 0; transition: opacity 0.2s ease; }
+.playhead { position: absolute; left: 0; right: 0; height: 1px; background: var(--track); }
 .playhead::before {
   content: "";
   position: absolute;
@@ -461,18 +410,69 @@ p { margin: 0; }
   color: var(--track);
 }
 
+.clip {
+  position: absolute;
+  top: var(--top);
+  height: var(--h);
+  left: calc(var(--col) * (100% / var(--cols)));
+  width: calc(100% / var(--cols) - var(--gap));
+  overflow: hidden;
+  background: var(--ink-800);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--clip);
+  border-radius: var(--radius);
+  padding: 0.8rem 0.9rem;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.clip:hover {
+  background: var(--ink-750);
+  border-color: var(--line);
+  /* a short role cannot show all its text inside its span — open it on hover */
+  height: auto;
+  min-height: var(--h);
+  overflow: visible;
+  z-index: 5;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+}
+/* fade the text off where the clip is shorter than its content */
+.clip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2rem;
+  background: linear-gradient(to bottom, transparent, var(--ink-800));
+  pointer-events: none;
+}
+.clip:hover::after { display: none; }
+
+.clip h3 { font-size: 0.95rem; margin-bottom: 0.15rem; }
+.clip .org { font-size: 0.86rem; color: var(--fg); }
+.clip .when {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  color: var(--fg-dim);
+  margin: 0.3rem 0 0.5rem;
+}
+.clip .details { font-size: 0.82rem; color: var(--fg-mid); line-height: 1.45; }
+
 /* stacked list for narrow screens */
 .tl-stack { display: none; }
-.tl-stack .clip { position: static; min-height: 0; margin-bottom: 0.75rem; }
+.tl-stack .clip {
+  position: static;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  margin-bottom: 0.75rem;
+}
+.tl-stack .clip::after { display: none; }
 
 @media (max-width: 940px) {
   .timeline { display: none; }
   .tl-stack { display: block; }
 }
-
-.timeline.is-laid .tl-rule,
-.timeline.is-laid .tl-year,
-.timeline.is-laid .playhead { opacity: 1; }
 
 /* ---------- projects ---------- */
 .project { display: grid; gap: 0.6rem; }

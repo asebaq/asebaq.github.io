@@ -1,12 +1,14 @@
 ---
 import { roles, laneMeta } from "../data/content";
 
-// The timeline is a video-editor track: time runs top to bottom, each lane is
-// a track, each role is a clip sized by how long it lasted. Clips sit at their
-// true start month and are pushed down only to avoid colliding with the clip
-// above — a script re-runs that packing once real text heights are known.
-const PX_PER_MONTH = 13;
-const HEAD = 40; // room for the lane headings above the first tick
+// A video-editor track. Vertical position and height are pure time — a clip
+// always sits at its real start month and is exactly as tall as it lasted.
+// Roles that ran at the same time cannot share a column, so each one is
+// assigned the first free column, the way overlapping events are laid out in
+// a calendar. Colour carries the kind of work instead of the column.
+const PX_PER_MONTH = 26;
+const MIN_H = 96; // a two-month contract still needs room for its title
+const COL_GAP = 12;
 
 const monthIndex = (iso: string) => {
   const [y, m] = iso.split("-").map(Number);
@@ -17,7 +19,7 @@ const now = new Date();
 const nowIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 const nowIndex = monthIndex(nowIso);
 const startIndex = Math.min(...roles.map((r) => monthIndex(r.start)));
-const firstYear = Math.ceil(startIndex / 12); // first full year on the axis
+const firstYear = Math.ceil(startIndex / 12);
 const lastYear = Math.floor(nowIndex / 12);
 
 const fmt = (iso: string | null) =>
@@ -29,24 +31,30 @@ const fmt = (iso: string | null) =>
         timeZone: "UTC",
       });
 
-const lanes = (Object.keys(laneMeta) as Array<keyof typeof laneMeta>).map((lane) => ({
-  lane,
-  ...laneMeta[lane],
-  clips: roles
-    .filter((r) => r.lane === lane)
-    .sort((a, b) => monthIndex(b.start) - monthIndex(a.start))
-    .map((r) => ({
-      ...r,
-      top: (monthIndex(r.start) - startIndex) * PX_PER_MONTH,
-      span: (monthIndex(r.end ?? nowIso) - monthIndex(r.start)) * PX_PER_MONTH,
-    })),
-}));
+// oldest first, so column assignment reads left to right over time
+const placed = roles
+  .map((r) => {
+    const top = (monthIndex(r.start) - startIndex) * PX_PER_MONTH;
+    const height = Math.max((monthIndex(r.end ?? nowIso) - monthIndex(r.start)) * PX_PER_MONTH, MIN_H);
+    return { ...r, top, height, bottom: top + height };
+  })
+  .sort((a, b) => a.top - b.top || b.height - a.height);
+
+const columnBottoms: number[] = [];
+const clips = placed.map((c) => {
+  let col = columnBottoms.findIndex((bottom) => bottom <= c.top);
+  if (col === -1) col = columnBottoms.length;
+  columnBottoms[col] = c.bottom + COL_GAP;
+  return { ...c, col };
+});
+const cols = columnBottoms.length;
 
 const years = Array.from({ length: lastYear - firstYear + 1 }, (_, i) => firstYear + i).map((y) => ({
   year: y,
   top: (y * 12 - startIndex) * PX_PER_MONTH,
 }));
 
+const trackHeight = Math.max(...clips.map((c) => c.bottom), (nowIndex - startIndex) * PX_PER_MONTH) + 16;
 const playheadTop = (nowIndex - startIndex) * PX_PER_MONTH;
 const laneColor = { core: "var(--track)", side: "var(--track-side)", research: "var(--track-res)" };
 const flat = roles.slice().sort((a, b) => monthIndex(b.start) - monthIndex(a.start));
@@ -57,44 +65,37 @@ const flat = roles.slice().sort((a, b) => monthIndex(b.start) - monthIndex(a.sta
     <div class="band-head reveal">
       <p class="eyebrow">Experience</p>
       <h2>Seven years on one track</h2>
-      <p>Full-time roles, consulting and research on a single time axis. Clip length is time served, and the overlaps are real.</p>
+      <p>One time axis, top to bottom. Each clip starts at the month the role started and is as tall as the role lasted — roles side by side ran at the same time.</p>
     </div>
 
     <div class="legend reveal">
-      {lanes.map((l) => (
-        <span><i style={`background:${laneColor[l.lane]}`}></i>{l.label}</span>
+      {(Object.keys(laneMeta) as Array<keyof typeof laneMeta>).map((lane) => (
+        <span><i style={`background:${laneColor[lane]}`}></i>{laneMeta[lane].label}</span>
       ))}
     </div>
 
     <!-- wide screens: track view -->
-    <div class="timeline" data-head={HEAD}>
-      <div class="tl-overlay" aria-hidden="true">
-        {years.map((y) => <div class="tl-rule" data-y={y.top}></div>)}
-        <div class="playhead" data-y={playheadTop}><span>now</span></div>
-      </div>
-
+    <div class="timeline" style={`height:${trackHeight}px; --cols:${cols}; --gap:${COL_GAP}px`}>
       <div class="tl-axis" aria-hidden="true">
-        {years.map((y) => <span class="tl-year" data-y={y.top}>{y.year}</span>)}
+        {years.map((y) => (
+          <>
+            <span class="tl-year" style={`top:${y.top}px`}>{y.year}</span>
+            <div class="tl-rule" style={`top:${y.top}px`}></div>
+          </>
+        ))}
+        <div class="playhead" style={`top:${playheadTop}px`}><span>now</span></div>
       </div>
 
-      {lanes.map((l) => (
-        <div class="tl-lane">
-          <p class="tl-lane-head">{l.label} <em>{l.hint}</em></p>
-          <div class="tl-body">
-            {l.clips.map((c) => (
-              <article
-                class="clip"
-                data-top={c.top}
-                style={`--top:${c.top}px; --h:${c.span}px; --clip:${laneColor[l.lane]}`}
-              >
-                <h3>{c.title}</h3>
-                <p class="org">{c.org}</p>
-                <p class="when">{fmt(c.start)} — {fmt(c.end)} · {c.place}</p>
-                <p class="details">{c.details}</p>
-              </article>
-            ))}
-          </div>
-        </div>
+      {clips.map((c) => (
+        <article
+          class="clip"
+          style={`--top:${c.top}px; --h:${c.height}px; --col:${c.col}; --clip:${laneColor[c.lane]}`}
+        >
+          <h3>{c.title}</h3>
+          <p class="org">{c.org}</p>
+          <p class="when">{fmt(c.start)} — {fmt(c.end)} · {c.place}</p>
+          <p class="details">{c.details}</p>
+        </article>
       ))}
     </div>
 
@@ -111,41 +112,3 @@ const flat = roles.slice().sort((a, b) => monthIndex(b.start) - monthIndex(a.sta
     </div>
   </div>
 </section>
-
-<script>
-  // Pack each lane with the clips' real rendered heights, then size the track.
-  const pack = () => {
-    const track = document.querySelector<HTMLElement>(".timeline");
-    if (!track || getComputedStyle(track).display === "none") return;
-    let tallest = 0;
-    // the lane headings sit above the time axis; everything on the axis is
-    // offset by however tall they actually are
-    const firstBody = track.querySelector<HTMLElement>(".tl-body");
-    const head = firstBody ? firstBody.offsetTop : Number(track.dataset.head ?? 40);
-    track.querySelectorAll<HTMLElement>("[data-y]").forEach((el) => {
-      el.style.top = `${head + Number(el.dataset.y)}px`;
-    });
-
-    track.querySelectorAll<HTMLElement>(".tl-body").forEach((body) => {
-      const clips = Array.from(body.querySelectorAll<HTMLElement>(".clip")).sort(
-        (a, b) => Number(a.dataset.top) - Number(b.dataset.top)
-      );
-      let cursor = 0;
-      for (const clip of clips) {
-        const top = Math.max(Number(clip.dataset.top), cursor);
-        clip.style.top = `${top}px`;
-        cursor = top + clip.offsetHeight + 14;
-      }
-      body.style.height = `${cursor}px`;
-      tallest = Math.max(tallest, cursor);
-    });
-
-    track.style.height = `${tallest + head + 24}px`;
-    track.classList.add("is-laid");
-  };
-
-  const run = () => requestAnimationFrame(pack);
-  run();
-  window.addEventListener("resize", run);
-  if (document.fonts) document.fonts.ready.then(run);
-</script>
