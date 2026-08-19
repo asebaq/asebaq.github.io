@@ -163,7 +163,21 @@ p { margin: 0; }
   color: var(--fg-mid);
 }
 .site-nav a:hover { color: var(--fg); text-decoration: none; }
-@media (max-width: 760px) { .site-nav { display: none; } }
+@media (max-width: 760px) {
+  .site-header .wrap {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+    padding-block: 0.7rem;
+    min-height: 0;
+  }
+  .brand span { display: none; }
+  /* the page is long on a phone; keep the section list reachable */
+  .site-nav { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav ul { gap: 0.9rem; }
+  .site-nav a { white-space: nowrap; font-size: 0.72rem; }
+}
 
 /* ---------- hero: the detection box ---------- */
 .hero { padding-block: clamp(3.5rem, 9vw, 7rem) clamp(3rem, 7vw, 5rem); }
