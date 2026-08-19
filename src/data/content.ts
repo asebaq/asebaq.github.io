@@ -10,7 +10,7 @@ export const person = {
   email: "ahmad.sebaq@gmail.com",
   linkedin: "https://www.linkedin.com/in/ahmad-sebaq-807273104/",
   github: "https://github.com/asebaq",
-  scholar: "", // add your Google Scholar profile URL here
+  scholar: "https://scholar.google.com.eg/citations?user=Ixo5qL0AAAAJ&hl=en",
   calendly: "", // add a booking link here to show the "Schedule a call" button
   intro:
     "I build video systems that run in production — detection, tracking, re-identification and action recognition on live camera feeds, broadcast streams and microscopy. Seven years across surveillance, sports analytics, biometrics and medical imaging.",
