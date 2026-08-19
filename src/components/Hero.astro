@@ -1,0 +1,26 @@
+---
+import { person, roles } from "../data/content";
+const current = roles.filter((r) => r.end === null);
+---
+
+<section class="hero wrap">
+  <div class="bbox">
+    <span class="bbox-tag">subject · conf 0.99</span>
+    <h1>{person.name}</h1>
+    <p class="role">{person.role} — {person.years} years</p>
+    <p class="intro">{person.intro}</p>
+
+    <div class="cta-row">
+      <a class="btn btn--primary" href="#contact">Start a conversation</a>
+      {person.cv.map((c) => (
+        <a class="btn" href={c.file} target="_blank" rel="noopener">{c.label} (PDF)</a>
+      ))}
+    </div>
+
+    <div class="hero-meta">
+      <p>Now — <b>{current.map((r) => r.org).join(" · ")}</b></p>
+      <p>Based in <b>{person.location}</b></p>
+      <p>Teams led — <b>up to 8</b></p>
+    </div>
+  </div>
+</section>

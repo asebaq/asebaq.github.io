@@ -1,0 +1,26 @@
+---
+import { projects } from "../data/content";
+---
+
+<section id="projects" class="band">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <p class="eyebrow">Projects</p>
+      <h2>Systems I shipped end to end</h2>
+      <p>Each one went to a real user: a broadcaster, a clinic, a workshop floor.</p>
+    </div>
+
+    <div class="grid grid--3">
+      {projects.map((p) => (
+        <article class="card project reveal">
+          <span class="kicker">{p.kicker}</span>
+          <h3>{p.link ? <a href={p.link} target="_blank" rel="noopener">{p.title}</a> : p.title}</h3>
+          <p>{p.body}</p>
+          <div class="stack">
+            {p.stack.map((s) => <span>{s}</span>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

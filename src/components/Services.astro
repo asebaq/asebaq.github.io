@@ -1,0 +1,29 @@
+---
+import { services, availability } from "../data/content";
+---
+
+<section id="work" class="band band--alt">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <p class="eyebrow">Work with me</p>
+      <h2>Three ways we can work together</h2>
+      <p>Consulting on production computer vision, free career guidance for people breaking in, and talks for teams and universities.</p>
+    </div>
+
+    <div class="grid grid--3">
+      {services.map((s) => (
+        <article class="card reveal">
+          <span class="card-kind">{s.kind}</span>
+          <h3>{s.title}</h3>
+          <p class="rate">{s.rate}</p>
+          <p>{s.body}</p>
+          <ul class="ticks">
+            {s.points.map((p) => <li>{p}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+
+    <p class="note reveal"><strong>Availability.</strong> {availability}</p>
+  </div>
+</section>

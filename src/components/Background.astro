@@ -1,0 +1,61 @@
+---
+import { education, publications, awards, languages } from "../data/content";
+---
+
+<section id="background" class="band band--alt">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <p class="eyebrow">Background</p>
+      <h2>Education, publications, awards</h2>
+      <p>Four peer-reviewed papers across remote sensing, agriculture, dental imaging and applied mathematics.</p>
+    </div>
+
+    <div class="grid grid--2">
+      <div class="card reveal">
+        <h3 class="sub">Education</h3>
+        <div class="stack-list">
+          {education.map((e) => (
+            <div class="line-item">
+              <div>
+                <p><strong>{e.degree}</strong></p>
+                <p>{e.school} — {e.detail}</p>
+              </div>
+              <span class="year">{e.period}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3 class="sub" style="margin-top:2rem">Awards</h3>
+        <div class="stack-list">
+          {awards.map((a) => (
+            <div class="line-item">
+              <p>{a.title}</p>
+              <span class="year">{a.year}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3 class="sub" style="margin-top:2rem">Languages</h3>
+        <div class="stack-list">
+          {languages.map((l) => (
+            <div class="line-item">
+              <p><strong>{l.name}</strong> — {l.level}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <h3 class="sub">Publications</h3>
+        <div class="stack-list">
+          {publications.map((p) => (
+            <div class="pub">
+              <p><a href={p.doi} target="_blank" rel="noopener">{p.title}</a></p>
+              <p class="venue">{p.venue}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

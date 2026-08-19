@@ -1,0 +1,46 @@
+---
+import { person } from "../data/content";
+---
+
+<section id="contact" class="band band--alt">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <p class="eyebrow">Contact</p>
+      <h2>Tell me what you are building</h2>
+      <p>Freelance work, consulting, a talk, or career advice — email is the fastest way to reach me. I reply within 48 hours.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="method reveal">
+        <h3>Email</h3>
+        <p><a href={`mailto:${person.email}`}>{person.email}</a></p>
+      </div>
+      <div class="method reveal">
+        <h3>LinkedIn</h3>
+        <p><a href={person.linkedin} target="_blank" rel="noopener">ahmad-sebaq</a></p>
+      </div>
+      <div class="method reveal">
+        <h3>GitHub</h3>
+        <p><a href={person.github} target="_blank" rel="noopener">github.com/asebaq</a></p>
+      </div>
+      {person.scholar && (
+        <div class="method reveal">
+          <h3>Google Scholar</h3>
+          <p><a href={person.scholar} target="_blank" rel="noopener">View publications</a></p>
+        </div>
+      )}
+      {person.cv.map((c) => (
+        <div class="method reveal">
+          <h3>{c.label}</h3>
+          <p><a href={c.file} target="_blank" rel="noopener">Download PDF</a></p>
+        </div>
+      ))}
+    </div>
+
+    {person.calendly && (
+      <p class="note reveal">
+        Prefer to talk? <a href={person.calendly} target="_blank" rel="noopener">Book a 30-minute call</a>.
+      </p>
+    )}
+  </div>
+</section>

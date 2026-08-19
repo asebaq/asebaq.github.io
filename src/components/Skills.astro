@@ -1,0 +1,24 @@
+---
+import { skills } from "../data/content";
+---
+
+<section id="skills" class="band">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <p class="eyebrow">Skills</p>
+      <h2>What I build with</h2>
+      <p>Video understanding first, with the deep-learning, LLM and deployment work that surrounds it.</p>
+    </div>
+
+    <div class="grid grid--3">
+      {skills.map((group) => (
+        <article class="card skill-card reveal">
+          <h3>{group.title}</h3>
+          <ul>
+            {group.items.map((i) => <li>{i}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
