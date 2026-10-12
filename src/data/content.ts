@@ -13,7 +13,7 @@ export const person = {
   scholar: "https://scholar.google.com.eg/citations?user=Ixo5qL0AAAAJ&hl=en",
   calendly: "", // add a booking link here to show the "Schedule a call" button
   intro:
-    "I build video systems that run in production — detection, tracking, re-identification and action recognition on live camera feeds, broadcast streams and microscopy. Seven years across surveillance, sports analytics, biometrics and medical imaging.",
+    "I build vision and AI systems that run in production — detection, tracking, re-identification and action recognition on live camera feeds, broadcast streams and microscopy, plus Arabic agentic RAG, VLM fine-tuning and GPU inference services. Seven years across surveillance, sports analytics, biometrics, robotics data, medical and geospatial imaging.",
   cv: [{ label: "CV", file: "/cv-ahmad-sebaq.pdf" }],
 };
 
@@ -24,7 +24,7 @@ export const services = [
     kind: "Consulting",
     title: "Freelance & Consulting",
     rate: "Rate on request",
-    body: "Computer-vision system design and delivery: video pipelines, detection and tracking, re-identification, biometrics, VLM and RAG integration, edge and on-prem deployment.",
+    body: "Computer-vision and LLM system design and delivery: video pipelines, detection and tracking, re-identification, biometrics, VLM fine-tuning, agentic RAG and evaluation, edge, on-prem and AWS GPU deployment.",
     points: [
       "30-minute scoping call before any commitment",
       "Hourly or fixed-scope project pricing",
@@ -99,12 +99,12 @@ export const skills = [
   {
     title: "Generative AI & LLMs",
     items: [
-      "LLM orchestration (LangGraph, LangChain)",
-      "Agentic pipelines and tool-use",
+      "LLM orchestration (LangGraph, LangChain), tool-use",
       "Agentic RAG with grounded citations",
-      "Vision-language model fine-tuning",
+      "VLM / LLM fine-tuning: QLoRA SFT, GRPO (ms-swift, PEFT)",
       "Vector & hybrid search (Qdrant, Elasticsearch)",
-      "Reranking, RRF fusion, LLM-as-judge evaluation",
+      "Reranking, RRF fusion, Arabic text processing",
+      "LLM-as-judge calibrated to human labels (κ, Hit@k, nDCG)",
     ],
   },
   {
@@ -112,19 +112,19 @@ export const skills = [
     items: [
       "FFmpeg, live stream ingest",
       "WebSocket / SSE streaming services",
-      "Industrial-camera capture (GenTL, Harvesters)",
-      "ONNX Runtime inference",
+      "Industrial cameras (GenTL), desktop apps (Electron, PyInstaller)",
+      "ONNX Runtime, vLLM, llama.cpp, NF4 quantization",
+      "GPU serving: admission control, SQS workers, caching",
       "Edge: Jetson Nano & Orin, Raspberry Pi",
-      "Desktop packaging (Electron, PyInstaller)",
     ],
   },
   {
     title: "Engineering & MLOps",
     items: [
       "Python, C++, JavaScript / TypeScript, React",
-      "FastAPI, Docker, Jenkins CI, AWS EC2",
-      "PostgreSQL, SQLAlchemy, Alembic",
-      "Git, structured logging, Sentry",
+      "FastAPI, Docker, Kubernetes, Jenkins CI, pytest",
+      "AWS: EKS, EC2 GPU, S3, SQS, ECR",
+      "PostgreSQL, SQLAlchemy, Alembic, Sentry",
       "QGIS, Sentinel-2 / Planet / Maxar imagery",
       "LeRobot imitation-learning data pipelines",
     ],
@@ -152,7 +152,7 @@ export const roles = [
     start: "2026-01",
     end: null,
     details:
-      "Egocentric video data platform processing 100+ hours of 3-camera teleoperation footage per week into validated LeRobot datasets. Arabic agentic RAG service on LangGraph — Hit@1 0.84 → 0.95, correct refusal 55% → 94% on a 278-question benchmark. Arabic ASR pipeline and RGB/IR drone-image alignment.",
+      "Arabic agentic RAG on LangGraph, deployed on AWS EKS — Qwen3 embedding and reranking lifted Hit@1 0.84 → 0.95 and nDCG@10 0.85 → 0.93; LLM judges calibrated against human labels, correct refusal 55% → 94%. QLoRA + GRPO fine-tuning of Qwen3-VL-8B to segment and caption teleoperation video (segment F1 0.56 → 0.71). Egocentric data platform turning 100+ hours of 3-camera video per week into LeRobot datasets. Arabic ASR across dialects, Mask2Former segmentation (mAP 0.59 → 0.68).",
   },
   {
     lane: "core",

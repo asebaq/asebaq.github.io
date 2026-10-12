@@ -30,7 +30,7 @@ Dates in `roles` use `YYYY-MM`; `end: null` means "present" and puts the clip ac
 Refresh it after rebuilding the CV:
 
 ```bash
-cp ~/latex/ahmad_sebaq_CV/main.pdf public/cv-ahmad-sebaq.pdf
+cp ~/latex/ahmad_sebaq_CV/general/main.pdf public/cv-ahmad-sebaq.pdf
 ```
 
 ## Local development
